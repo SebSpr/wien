@@ -41,6 +41,18 @@ L.control
   })
   .addTo(map);
 
-  L.control
+L.control
   .fullscreen()
   .addTo(map);
+
+async function loadSights(url) {
+  console.log("Loading", url)
+  var response = await fetch(url);
+  var geojson = await response.json();
+  console.log(geojson);
+  L.geoJSON(geojson).addTo(map);
+}
+
+
+loadSights("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:SEHENSWUERDIGOGD&srsName=EPSG:4326&outputFormat=json")
+
