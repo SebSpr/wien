@@ -55,7 +55,18 @@ async function loadSights(url) {
   var response = await fetch(url);
   var geojson = await response.json();
   console.log(geojson);
-  L.geoJSON(geojson).addTo(themaLayer.sights);
+  L.geoJSON(geojson, {
+    onEachFeature: function (feature, layer) {
+      console.log(feature);
+      console.log(feature.properties.NAME);
+      layer.bindPopup(`
+      <img src="${feature.properties.THUMBNAIL}" alt="*">
+     <h4><a href="${feature.properties.WEITERE_INF}"
+     target="wien">${feature.properties.NAME}</a></h4>
+     <adress>${feature.properties.ADRESSE}</adresse>
+      `)
+    }
+  }).addTo(themaLayer.sights);
 }
 
 
