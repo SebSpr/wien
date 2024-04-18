@@ -14,6 +14,9 @@ let map = L.map("map").setView([stephansdom.lat, stephansdom.lng], 12);
 let startLayer = L.tileLayer.provider("BasemapAT.grau");
 startLayer.addTo(map);
 
+var themaLayer = {
+  sights: L.featureGroup().addTo(map),
+}
 // Hintergrundlayer
 L.control
   .layers({
@@ -25,6 +28,8 @@ L.control
     "BasemapAT Orthofoto": L.tileLayer.provider("BasemapAT.orthofoto"),
     "BasemapAT Beschriftung": L.tileLayer.provider("BasemapAT.overlay"),
     "ESRI.NatGeoWorldMap": L.tileLayer.provider("Esri.NatGeoWorldMap"),
+  }, {
+    "Sehenswürdigkeiten": themaLayer.sights,
   })
   .addTo(map);
 
@@ -50,7 +55,7 @@ async function loadSights(url) {
   var response = await fetch(url);
   var geojson = await response.json();
   console.log(geojson);
-  L.geoJSON(geojson).addTo(map);
+  L.geoJSON(geojson).addTo(themaLayer.sights);
 }
 
 
