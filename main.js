@@ -16,6 +16,7 @@ startLayer.addTo(map);
 
 var themaLayer = {
   sights: L.featureGroup().addTo(map),
+  lines: L.featureGroup().addTo(map),
 }
 // Hintergrundlayer
 L.control
@@ -30,14 +31,11 @@ L.control
     "ESRI.NatGeoWorldMap": L.tileLayer.provider("Esri.NatGeoWorldMap"),
   }, {
     "Sehenswürdigkeiten": themaLayer.sights,
+    "Vienna Sightseeing Linien": themaLayer.lines,
+
   })
   .addTo(map);
 
-// Marker Stephansdom
-L.marker([stephansdom.lat, stephansdom.lng])
-  .addTo(map)
-  .bindPopup(stephansdom.title)
-  .openPopup();
 
 // Maßstab
 L.control
@@ -69,6 +67,77 @@ async function loadSights(url) {
   }).addTo(themaLayer.sights);
 }
 
+async function loadSights(url) {
+  console.log("Loading", url)
+  var response = await fetch(url);
+  var geojson = await response.json();
+  console.log(geojson);
+  L.geoJSON(geojson, {
+    onEachFeature: function (feature, layer) {
+      console.log(feature);
+      console.log(feature.properties.NAME);
+      layer.bindPopup(`
+      <img src="${feature.properties.THUMBNAIL}" alt="*">
+     <h4><a href="${feature.properties.WEITERE_INF}"
+     target="wien">${feature.properties.NAME}</a></h4>
+     <adress>${feature.properties.ADRESSE}</adresse>
+      `)
+    }
+  }).addTo(themaLayer.sights);
+}
+
 
 loadSights("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:SEHENSWUERDIGOGD&srsName=EPSG:4326&outputFormat=json")
+
+async function loadLines(url) {
+  console.log("Loading", url)
+  var response = await fetch(url);
+  var geojson = await response.json();
+  console.log(geojson);
+  L.geoJSON(geojson, {
+    onEachFeature: function (feature, layer) {
+      console.log(feature);
+      console.log(feature.properties.NAME);
+    }
+  }).addTo(themaLayer.lines);
+}
+
+loadLines("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKLINIEVSLOGD&srsName=EPSG:4326&outputFormat=json")
+
+
+
+
+loadStops()
+loadZones()
+loadHotels()
+
+
+
+
+
+/*
+Suche Sightseeing
+loadLines
+Touristische Kraftfahrlinien Liniennetz Vienna Sightseeing Linie Wien 
+lines
+
+loadStops
+Touristische Kraftfahrlinien Haltestellen Vienna Sightseeing Linie Standorte Wien 
+stops
+
+fußgängerzone
+loadZones
+Fußgängerzonen Wien 
+zones
+
+hotels
+loadHotels
+Hotels und Unterkünfte Standorte Wien
+hotels
+
+
+
+
+
+*/
 
