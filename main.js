@@ -17,7 +17,7 @@ startLayer.addTo(map);
 var themaLayer = {
   sights: L.featureGroup(),
   lines: L.featureGroup().addTo(map),
-  stops: L.featureGroup(),
+  stops: L.featureGroup().addTo(map),
   zones: L.featureGroup(),
   hotels: L.featureGroup(),
 }
@@ -109,10 +109,9 @@ async function loadStops(url) {
   L.geoJSON(geojson, {
     onEachFeature: function (feature, layer) {
       layer.bindPopup(`
-      // <h4><a class ="popup"><i class="fa-solid fa-bus"></i>${feature.properties.LINE_NAME}</a></h4>
-      
+      <h4><a style="color: black;"><i class="fa-solid fa-bus"></i>${feature.properties.LINE_NAME}</a></h4>
+      <a style="color: black;"></i>${feature.properties.STAT_ID} ${feature.properties.STAT_NAME}</a>
       `)
-
     }
   }).addTo(themaLayer.stops);
 }
