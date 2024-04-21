@@ -18,8 +18,8 @@ var themaLayer = {
   sights: L.featureGroup(),
   lines: L.featureGroup(),
   stops: L.featureGroup(),
-  zones: L.featureGroup().addTo(map),
-  hotels: L.featureGroup(),
+  zones: L.featureGroup(),
+  hotels: L.featureGroup().addTo(map),
 }
 // Hintergrundlayer
 L.control
@@ -89,8 +89,6 @@ async function loadLines(url) {
       layer.bindPopup(`
       <h4><a style="color: black;"><i class="fa-solid fa-bus"></i>${feature.properties.LINE_NAME}</a></h4>
       <a style="color: black;"><i class="fa-solid fa-location-crosshairs"></i>${feature.properties.FROM_NAME}</a><br>
-      <a style="color: black;"><i class="fa-solid fa-down-long"></i></a><br>
-      <a style="color: black;"><i class="fa-solid fa-location-crosshairs"></i>${feature.properties.TO_NAME}</a>
       `);
     }
   }).addTo(themaLayer.lines);
@@ -129,8 +127,8 @@ async function loadZones(url) {
     onEachFeature: function (feature, layer) {
       layer.bindPopup(`
       <h4><a style="color: black;">Fußgängerzone ${feature.properties.ADRESSE}</a></h4>
-      <a style="color: black;"><i class="fa-regular fa-clock"></i> ${feature.properties.ZEITRAUM}</a><br>
-      <a style="color: black;"><i class="fa-solid fa-circle-info"></i> ${feature.properties.AUSN_TEXT}</a>
+      <p style="color: black;"><i class="fa-regular fa-clock"></i> ${feature.properties.ZEITRAUM}</p><br>
+      <p style="color: black;"><i class="fa-solid fa-circle-info"></i> ${feature.properties.AUSN_TEXT}</p>
       `)
     }
   }).addTo(themaLayer.zones);
@@ -144,21 +142,30 @@ loadZones("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&vers
 
 
 
+
 async function loadHotels(url) {
-  console.log("Loading", url)
+  console.log("Loading", url);
   var response = await fetch(url);
   var geojson = await response.json();
   console.log(geojson);
   L.geoJSON(geojson, {
     onEachFeature: function (feature, layer) {
       layer.bindPopup(`
-      <h4><a style="color: black;">Fußgängerzone ${feature.properties.ADRESSE}</a></h4>
-      <a style="color: black;"><i class="fa-regular fa-clock"></i> ${feature.properties.ZEITRAUM}</a><br>
-      <a style="color: black;"><i class="fa-solid fa-circle-info"></i> ${feature.properties.AUSN_TEXT}</a>
-    `)
+      <h3><a style="color: black;">${feature.properties.BETRIEB}</a></h3>
+      <h4><a style="color: black;">${feature.properties.BETRIEBSART_TXT} ${feature.properties.KATEGORIE_TXT}</a></h4>
+      <hr style="border-top: 1px solid black; margin-bottom: 10px;">
+      <adress>Adresse: ${feature.properties.ADRESSE}</adresse><br>
+      <a style="color: black;">Tel.: <a style="color: black;" href="tel:${feature.properties.KONTAKT_TEL}" target="_blank">${feature.properties.KONTAKT_TEL}</a></a><br>
+      <a href="mailto:${feature.properties.KONTAKT_EMAIL}" target="_blank">${feature.properties.KONTAKT_EMAIL}</a><br>
+      <a href="${feature.properties.WEBLINK1}" target="_blank">Homepage</a>
+    `);
     }
   }).addTo(themaLayer.hotels);
 }
+
+
+
+
 
 loadHotels("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:UNTERKUNFTOGD&srsName=EPSG:4326&outputFormat=json")
 
