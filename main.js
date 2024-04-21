@@ -16,9 +16,9 @@ startLayer.addTo(map);
 
 var themaLayer = {
   sights: L.featureGroup(),
-  lines: L.featureGroup().addTo(map),
-  stops: L.featureGroup().addTo(map),
-  zones: L.featureGroup(),
+  lines: L.featureGroup(),
+  stops: L.featureGroup(),
+  zones: L.featureGroup().addTo(map),
   hotels: L.featureGroup(),
 }
 // Hintergrundlayer
@@ -120,7 +120,6 @@ loadStops("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&vers
 
 
 
-
 async function loadZones(url) {
   console.log("Loading", url)
   var response = await fetch(url);
@@ -128,11 +127,16 @@ async function loadZones(url) {
   console.log(geojson);
   L.geoJSON(geojson, {
     onEachFeature: function (feature, layer) {
-      // console.log(feature);
-      // console.log(feature.properties.NAME);
+      layer.bindPopup(`
+      <h4><a style="color: black;">Fußgängerzone ${feature.properties.ADRESSE}</a></h4>
+      <a style="color: black;"><i class="fa-regular fa-clock"></i> ${feature.properties.ZEITRAUM}</a><br>
+      <a style="color: black;"><i class="fa-solid fa-circle-info"></i> ${feature.properties.AUSN_TEXT}</a>
+      `)
     }
   }).addTo(themaLayer.zones);
 }
+
+
 
 loadZones("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:FUSSGEHERZONEOGD&srsName=EPSG:4326&outputFormat=json")
 
@@ -147,8 +151,11 @@ async function loadHotels(url) {
   console.log(geojson);
   L.geoJSON(geojson, {
     onEachFeature: function (feature, layer) {
-      // console.log(feature);
-      // console.log(feature.properties.NAME);
+      layer.bindPopup(`
+      <h4><a style="color: black;">Fußgängerzone ${feature.properties.ADRESSE}</a></h4>
+      <a style="color: black;"><i class="fa-regular fa-clock"></i> ${feature.properties.ZEITRAUM}</a><br>
+      <a style="color: black;"><i class="fa-solid fa-circle-info"></i> ${feature.properties.AUSN_TEXT}</a>
+    `)
     }
   }).addTo(themaLayer.hotels);
 }
