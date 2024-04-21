@@ -19,7 +19,7 @@ var themaLayer = {
   lines: L.featureGroup(),
   stops: L.featureGroup(),
   zones: L.featureGroup(),
-  hotels: L.featureGroup().addTo(map),
+  hotels: L.featureGroup(),
 }
 // Hintergrundlayer
 L.control
@@ -87,8 +87,10 @@ async function loadLines(url) {
   L.geoJSON(geojson, {
     onEachFeature: function (feature, layer) {
       layer.bindPopup(`
-      <h4><a style="color: black;"><i class="fa-solid fa-bus"></i>${feature.properties.LINE_NAME}</a></h4>
+      <h4><a style="color: black;"><i class="fa-solid fa-bus"></i> ${feature.properties.LINE_NAME}</a></h4>
       <a style="color: black;"><i class="fa-solid fa-location-crosshairs"></i>${feature.properties.FROM_NAME}</a><br>
+      <a style="color: black;"><i class="fa-solid fa-down-long"></i></a><br>
+      <a style="color: black;"><i class="fa-solid fa-location-crosshairs"></i>${feature.properties.TO_NAME}</a><br>
       `);
     }
   }).addTo(themaLayer.lines);
