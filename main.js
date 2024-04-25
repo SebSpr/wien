@@ -16,9 +16,9 @@ startLayer.addTo(map);
 
 var themaLayer = {
   sights: L.featureGroup(),
-  lines: L.featureGroup(),
+  lines: L.featureGroup().addTo(map),
   stops: L.featureGroup(),
-  zones: L.featureGroup().addTo(map),
+  zones: L.featureGroup(),
   hotels: L.featureGroup(),
 }
 // Hintergrundlayer
@@ -85,6 +85,29 @@ async function loadLines(url) {
   var geojson = await response.json();
   console.log(geojson);
   L.geoJSON(geojson, {
+    style: function(feature) {
+      var lineName = feature.properties.LINE_NAME;
+      var lineColor = "black";
+      if  (lineName == "Red Line"){
+        lineColor = "#FF4136"
+      } else if (lineName == "Yellow Line") {
+        lineColor= "#FFDC00";
+      } else if (lineName == "Blue Line") {
+        lineColor = "#0074D9";
+      } else if (lineName == "Green Line") {
+        lineColor = "#2ECC40";
+      } else if (lineName == "Grey Line") {
+        lineColor = "#AAAAAA";
+      }else if (lineName == "Orange Line") {
+        lineColor = "#FF851B";
+      } else {
+        //vielleicht kommen noch andere Linien dazu
+      }
+
+      return{
+        color: lineColor,
+      };
+     },
     onEachFeature: function (feature, layer) {
       layer.bindPopup(`
       <h4><a style="color: black;"><i class="fa-solid fa-bus"></i> ${feature.properties.LINE_NAME}</a></h4>
