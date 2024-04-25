@@ -17,9 +17,9 @@ startLayer.addTo(map);
 var themaLayer = {
   sights: L.featureGroup(),
   lines: L.featureGroup(),
-  stops: L.featureGroup().addTo(map),
+  stops: L.featureGroup(),
   zones: L.featureGroup(),
-  hotels: L.featureGroup(),
+  hotels: L.featureGroup().addTo(map),
 }
 // Hintergrundlayer
 L.control
@@ -177,7 +177,7 @@ async function loadStops(url) {
 
 loadStops("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKHTSVSLOGD&srsName=EPSG:4326&outputFormat=json")
 
-/* correct solution
+/* correct solution loadStops
  
 async function loadStops(url) {
   console.log("Loading", url)
@@ -207,10 +207,6 @@ loadStops("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&vers
 
 
 */
-
-
-
-
 
 
 
@@ -251,6 +247,30 @@ async function loadHotels(url) {
   var geojson = await response.json();
   console.log(geojson);
   L.geoJSON(geojson, {
+    pointToLayer: function (feature, latlng) {
+      var starNum = feature.properties.KATEGORIE_TXT
+      var h_star;
+      if (starNum == "1*") {
+        h_star = "icons/hotel_1star.png"
+      } else if (starNum == "2*") {
+        h_star = "icons/hotel_2stars.png"
+      } else if (starNum == "3*") {
+        h_star = "icons/hotel_3stars.png"
+      } else if (starNum == "4*") {
+        h_star = "icons/hotel_4stars.png"
+      } else if (starNum == "5*") {
+        h_star = "icons/hotel_5stars.png"
+      } else {
+        h_star = "icons/hotel_0star.png"
+      }
+      return L.marker(latlng, {
+        icon: L.icon({
+          iconUrl: h_star,
+          iconAnchor: [16, 37],
+          popupAnchor: [0, -37],
+        })
+      });
+    },
     onEachFeature: function (feature, layer) {
       layer.bindPopup(`
       <h3><a style="color: black;">${feature.properties.BETRIEB}</a></h3>
@@ -269,31 +289,4 @@ loadHotels("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&ver
 
 
 
-
-
-/*
-Suche Sightseeing
-loadLines
-Touristische Kraftfahrlinien Liniennetz Vienna Sightseeing Linie Wien 
-lines
-
-loadStops
-Touristische Kraftfahrlinien Haltestellen Vienna Sightseeing Linie Standorte Wien 
-stops
-
-fußgängerzone
-loadZones
-Fußgängerzonen Wien 
-zones
-
-hotels
-loadHotels
-Hotels und Unterkünfte Standorte Wien
-hotels
-
-
-
-
-
-*/
 
