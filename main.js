@@ -19,7 +19,7 @@ var themaLayer = {
   lines: L.featureGroup().addTo(map),
   stops: L.featureGroup().addTo(map),
   zones: L.featureGroup().addTo(map),
-  hotels: L.markerClusterGroup({disableClusteringAtZoom: 17}).addTo(map),
+  hotels: L.markerClusterGroup({ disableClusteringAtZoom: 17 }).addTo(map),
 }
 // Hintergrundlayer
 L.control
@@ -242,7 +242,7 @@ loadZones("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&vers
 
 
 async function loadHotels(url) {
-  console.log("Loading", url);  var response = await fetch(url);
+  console.log("Loading", url); var response = await fetch(url);
   var geojson = await response.json();
   console.log(geojson);
   L.geoJSON(geojson, {
