@@ -18,7 +18,7 @@ var themaLayer = {
   sights: L.featureGroup(),
   lines: L.featureGroup(),
   stops: L.featureGroup(),
-  zones: L.featureGroup(),
+  zones: L.featureGroup().addTo(map),
   hotels: L.featureGroup(),
 }
 // Hintergrundlayer
@@ -96,7 +96,6 @@ async function loadLines(url) {
   }).addTo(themaLayer.lines);
 }
 
-
 loadLines("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKLINIEVSLOGD&srsName=EPSG:4326&outputFormat=json")
 
 
@@ -126,6 +125,14 @@ async function loadZones(url) {
   var geojson = await response.json();
   console.log(geojson);
   L.geoJSON(geojson, {
+    style: function(feature) {
+      return {
+        color: "#F012BE",
+        weight: 1, 
+        opacity: 0.4,
+        fillOpacity: 0.1,
+      };
+    },
     onEachFeature: function (feature, layer) {
       layer.bindPopup(`
       <h4><a style="color: black;">Fußgängerzone ${feature.properties.ADRESSE}</a></h4>
@@ -135,8 +142,6 @@ async function loadZones(url) {
     }
   }).addTo(themaLayer.zones);
 }
-
-
 
 loadZones("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:FUSSGEHERZONEOGD&srsName=EPSG:4326&outputFormat=json")
 
@@ -164,10 +169,6 @@ async function loadHotels(url) {
     }
   }).addTo(themaLayer.hotels);
 }
-
-
-
-
 
 loadHotels("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:UNTERKUNFTOGD&srsName=EPSG:4326&outputFormat=json")
 
