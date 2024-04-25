@@ -62,6 +62,16 @@ async function loadSights(url) {
   var geojson = await response.json();
   console.log(geojson);
   L.geoJSON(geojson, {
+    pointToLayer: function(feature, latlng) {
+      return L.marker(latlng, {
+        icon: L.icon({
+          iconUrl: "icons/photo.png",
+          iconAnchor: [16,37],
+          popupAnchor: [0, -37],
+
+        })
+      });
+    },
     onEachFeature: function (feature, layer) {
       console.log(feature);
       console.log(feature.properties.NAME);
