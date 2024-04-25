@@ -15,8 +15,8 @@ let startLayer = L.tileLayer.provider("BasemapAT.grau");
 startLayer.addTo(map);
 
 var themaLayer = {
-  sights: L.featureGroup(),
-  lines: L.featureGroup().addTo(map),
+  sights: L.featureGroup().addTo(map),
+  lines: L.featureGroup(),
   stops: L.featureGroup(),
   zones: L.featureGroup(),
   hotels: L.featureGroup(),
