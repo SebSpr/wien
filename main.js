@@ -248,17 +248,17 @@ async function loadHotels(url) {
   console.log(geojson);
   L.geoJSON(geojson, {
     pointToLayer: function (feature, latlng) {
-      var starNum = feature.properties.KATEGORIE_TXT
+      var hotelKat = feature.properties.KATEGORIE_TXT
       var h_star;
-      if (starNum == "1*") {
+      if (hotelKat == "1*") {
         h_star = "icons/hotel_1star.png"
-      } else if (starNum == "2*") {
+      } else if (hotelKat == "2*") {
         h_star = "icons/hotel_2stars.png"
-      } else if (starNum == "3*") {
+      } else if (hotelKat == "3*") {
         h_star = "icons/hotel_3stars.png"
-      } else if (starNum == "4*") {
+      } else if (hotelKat == "4*") {
         h_star = "icons/hotel_4stars.png"
-      } else if (starNum == "5*") {
+      } else if (hotelKat == "5*") {
         h_star = "icons/hotel_5stars.png"
       } else {
         h_star = "icons/hotel_0star.png"
