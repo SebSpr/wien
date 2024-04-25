@@ -15,9 +15,9 @@ let startLayer = L.tileLayer.provider("BasemapAT.grau");
 startLayer.addTo(map);
 
 var themaLayer = {
-  sights: L.featureGroup().addTo(map),
+  sights: L.featureGroup(),
   lines: L.featureGroup(),
-  stops: L.featureGroup(),
+  stops: L.featureGroup().addTo(map),
   zones: L.featureGroup(),
   hotels: L.featureGroup(),
 }
@@ -62,11 +62,11 @@ async function loadSights(url) {
   var geojson = await response.json();
   console.log(geojson);
   L.geoJSON(geojson, {
-    pointToLayer: function(feature, latlng) {
+    pointToLayer: function (feature, latlng) {
       return L.marker(latlng, {
         icon: L.icon({
           iconUrl: "icons/photo.png",
-          iconAnchor: [16,37],
+          iconAnchor: [16, 37],
           popupAnchor: [0, -37],
 
         })
@@ -95,29 +95,29 @@ async function loadLines(url) {
   var geojson = await response.json();
   console.log(geojson);
   L.geoJSON(geojson, {
-    style: function(feature) {
+    style: function (feature) {
       var lineName = feature.properties.LINE_NAME;
       var lineColor = "black";
-      if  (lineName == "Red Line"){
+      if (lineName == "Red Line") {
         lineColor = "#FF4136"
       } else if (lineName == "Yellow Line") {
-        lineColor= "#FFDC00";
+        lineColor = "#FFDC00";
       } else if (lineName == "Blue Line") {
         lineColor = "#0074D9";
       } else if (lineName == "Green Line") {
         lineColor = "#2ECC40";
       } else if (lineName == "Grey Line") {
         lineColor = "#AAAAAA";
-      }else if (lineName == "Orange Line") {
+      } else if (lineName == "Orange Line") {
         lineColor = "#FF851B";
       } else {
         //vielleicht kommen noch andere Linien dazu
       }
 
-      return{
+      return {
         color: lineColor,
       };
-     },
+    },
     onEachFeature: function (feature, layer) {
       layer.bindPopup(`
       <h4><a style="color: black;"><i class="fa-solid fa-bus"></i> ${feature.properties.LINE_NAME}</a></h4>
@@ -139,6 +139,33 @@ async function loadStops(url) {
   var geojson = await response.json();
   console.log(geojson);
   L.geoJSON(geojson, {
+    pointToLayer: function (feature, latlng) {
+      var lineID = feature.properties.LINE_ID
+      var busstop;
+      if (lineID == 1) {
+        busstop = "icons/bus_1.png"
+      } else if (lineID == 2) {
+        busstop = "icons/bus_2.png"
+      } else if (lineID == 3) {
+        busstop = "icons/bus_3.png"
+      } else if (lineID == 4) {
+        busstop = "icons/bus_4.png"
+      } else if (lineID == 4) {
+        busstop = "icons/bus_4.png"
+      } else if (lineID == 5) {
+        busstop = "icons/bus_5.png"
+      } else if (lineID == 6) {
+        busstop = "icons/bus_6.png"
+      }
+
+      return L.marker(latlng, {
+        icon: L.icon({
+          iconUrl: busstop,
+          iconAnchor: [16, 37],
+          popupAnchor: [0, -37],
+        })
+      });
+    },
     onEachFeature: function (feature, layer) {
       layer.bindPopup(`
       <h4><a style="color: black;"><i class="fa-solid fa-bus"></i>${feature.properties.LINE_NAME}</a></h4>
@@ -158,10 +185,10 @@ async function loadZones(url) {
   var geojson = await response.json();
   console.log(geojson);
   L.geoJSON(geojson, {
-    style: function(feature) {
+    style: function (feature) {
       return {
         color: "#F012BE",
-        weight: 1, 
+        weight: 1,
         opacity: 0.4,
         fillOpacity: 0.1,
       };
