@@ -177,7 +177,36 @@ async function loadStops(url) {
 
 loadStops("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKHTSVSLOGD&srsName=EPSG:4326&outputFormat=json")
 
+/* correct solution
+ 
+async function loadStops(url) {
+  console.log("Loading", url)
+  var response = await fetch(url);
+  var geojson = await response.json();
+  console.log(geojson);
+  L.geoJSON(geojson, {
+    pointToLayer: function (feature, latlng) {
+      return L.marker(latlng, {
+        icon: L.icon({
+          iconUrl: `icons/bus_${feature.properties.LINE_ID}.png`,
+          iconAnchor: [16, 37],
+          popupAnchor: [0, -37],
+        })
+      });
+    },
+    onEachFeature: function (feature, layer) {
+      layer.bindPopup(`
+      <h4><a style="color: black;"><i class="fa-solid fa-bus"></i>${feature.properties.LINE_NAME}</a></h4>
+      <a style="color: black;"></i>${feature.properties.STAT_ID} ${feature.properties.STAT_NAME}</a>
+      `)
+    }
+  }).addTo(themaLayer.stops);
+}
 
+loadStops("https://data.wien.gv.at/daten/geo?service=WFS&request=GetFeature&version=1.1.0&typeName=ogdwien:TOURISTIKHTSVSLOGD&srsName=EPSG:4326&outputFormat=json")
+
+
+*/
 
 
 
